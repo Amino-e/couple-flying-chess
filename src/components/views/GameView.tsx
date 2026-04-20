@@ -11,7 +11,7 @@ interface GameViewProps {
   pathCoords: PathCoord[];
   currentTurn: number;
   isRolling: boolean;
-  onMove: (steps: number) => void;
+  onSetStep: (newStep: number) => void;
   onCheckTile: (landingStep: number) => TaskEventData | 'win' | null;
   onEndTurn: () => void;
   onSetRolling: (rolling: boolean) => void;
@@ -26,7 +26,7 @@ export function GameView({
   pathCoords,
   currentTurn,
   isRolling,
-  onMove,
+  onSetStep,
   onCheckTile,
   onEndTurn,
   onSetRolling,
@@ -55,15 +55,17 @@ export function GameView({
 
   const handleRollComplete = useCallback(() => {
     if (diceResult) {
-      const landingStep = calculateNewPosition(players[currentTurn].step, diceResult);
+      const currentStep = players[currentTurn].step;
+      const landingStep = calculateNewPosition(currentStep, diceResult);
       setIsMoving(true);
 
       const moveDelayMs = 220;
       let movedSteps = 0;
 
       const stepOnce = () => {
-        onMove(1);
         movedSteps += 1;
+        const exactIntermediateStep = calculateNewPosition(currentStep, movedSteps);
+        onSetStep(exactIntermediateStep);
 
         if (movedSteps < diceResult) {
           setTimeout(stepOnce, moveDelayMs);
@@ -88,7 +90,7 @@ export function GameView({
 
       setTimeout(stepOnce, moveDelayMs);
     }
-  }, [diceResult, players, currentTurn, onMove, onCheckTile, onWin, onTaskTrigger, onEndTurn]);
+  }, [diceResult, players, currentTurn, onSetStep, onCheckTile, onWin, onTaskTrigger, onEndTurn]);
 
   const activePlayer = players[currentTurn];
   const turnNumber = Math.floor(Math.max(...players.map(p => p.step)) / 4) + 1;

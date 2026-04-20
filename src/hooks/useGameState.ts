@@ -260,11 +260,9 @@ export function useGameState() {
     return true;
   }, [state.players, state.themes]);
 
-  const movePlayer = useCallback((steps: number) => {
+  const setPlayerStep = useCallback((newStep: number) => {
     setState(prev => {
       const activePlayer = prev.players[prev.turn];
-      const newStep = calculateNewPosition(activePlayer.step, steps);
-
       return {
         ...prev,
         players: prev.players.map(p =>
@@ -398,7 +396,7 @@ export function useGameState() {
     removeThemeTask,
     importThemeTasks,
     startGame,
-    movePlayer,
+    setPlayerStep,
     endTurn,
     setIsRolling,
     checkTile,

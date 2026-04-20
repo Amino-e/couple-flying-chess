@@ -24,7 +24,7 @@ function App() {
     removeThemeTask,
     importThemeTasks,
     startGame,
-    movePlayer,
+    setPlayerStep,
     endTurn,
     setIsRolling,
     checkTile,
@@ -176,7 +176,7 @@ function App() {
       />
 
       <WinModal
-        isOpen={!!winnerId}
+        isOpen={winnerId !== null}
         winnerName={winnerId !== null ? state.players[winnerId].name : ''}
         onRestart={() => {
           resetGame();
@@ -224,7 +224,7 @@ function App() {
           pathCoords={state.pathCoords}
           currentTurn={state.turn}
           isRolling={state.isRolling}
-          onMove={movePlayer}
+          onSetStep={setPlayerStep}
           onCheckTile={checkTile}
           onEndTurn={endTurn}
           onSetRolling={setIsRolling}
